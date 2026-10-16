@@ -1,0 +1,29 @@
+digraph PayrollER {
+  graph [rankdir=LR, splines=ortho, nodesep=0.35, ranksep=0.8, bgcolor="white", fontname="Arial", label="Employee Payroll and Statutory Deduction Management", labelloc=t, fontsize=20];
+  node [shape=plain, fontname="Arial", fontsize=10];
+  edge [fontname="Arial", fontsize=9, color="#496579", arrowsize=0.75];
+  departments [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#145077"><FONT COLOR="white"><B>DEPARTMENTS</B></FONT></TD></TR><TR><TD ALIGN="LEFT">PK department_id</TD></TR><TR><TD ALIGN="LEFT">UK department_code, department_name</TD></TR></TABLE>>];
+  designations [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#145077"><FONT COLOR="white"><B>DESIGNATIONS</B></FONT></TD></TR><TR><TD ALIGN="LEFT">PK designation_id</TD></TR><TR><TD ALIGN="LEFT">UK designation_name</TD></TR></TABLE>>];
+  employees [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#168A8A"><FONT COLOR="white"><B>EMPLOYEES</B></FONT></TD></TR><TR><TD ALIGN="LEFT">PK employee_id</TD></TR><TR><TD ALIGN="LEFT">UK employee_no, email</TD></TR><TR><TD ALIGN="LEFT">FK department_id, designation_id</TD></TR></TABLE>>];
+  salary [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#145077"><FONT COLOR="white"><B>SALARY_STRUCTURES</B></FONT></TD></TR><TR><TD ALIGN="LEFT">PK salary_structure_id</TD></TR><TR><TD ALIGN="LEFT">FK designation_id</TD></TR><TR><TD ALIGN="LEFT">basic, allowances, effective dates</TD></TR></TABLE>>];
+  attendance [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#145077"><FONT COLOR="white"><B>ATTENDANCE_SUMMARIES</B></FONT></TD></TR><TR><TD ALIGN="LEFT">PK attendance_id</TD></TR><TR><TD ALIGN="LEFT">FK employee_id</TD></TR><TR><TD ALIGN="LEFT">period, days, overtime</TD></TR></TABLE>>];
+  loans [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#145077"><FONT COLOR="white"><B>LOANS</B></FONT></TD></TR><TR><TD ALIGN="LEFT">PK loan_id</TD></TR><TR><TD ALIGN="LEFT">FK employee_id</TD></TR><TR><TD ALIGN="LEFT">principal, balance, installment</TD></TR></TABLE>>];
+  periods [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#145077"><FONT COLOR="white"><B>PAYROLL_PERIODS</B></FONT></TD></TR><TR><TD ALIGN="LEFT">PK period_id</TD></TR><TR><TD ALIGN="LEFT">UK period name/date range</TD></TR></TABLE>>];
+  payroll [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#168A8A"><FONT COLOR="white"><B>PAYROLL_DETAILS</B></FONT></TD></TR><TR><TD ALIGN="LEFT">PK payroll_id</TD></TR><TR><TD ALIGN="LEFT">FK employee_id, period_id, attendance_id</TD></TR><TR><TD ALIGN="LEFT">UK employee_id + period_id</TD></TR><TR><TD ALIGN="LEFT">gross, deductions, net</TD></TR></TABLE>>];
+  earnings [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#145077"><FONT COLOR="white"><B>PAYROLL_EARNINGS</B></FONT></TD></TR><TR><TD ALIGN="LEFT">PK earning_id</TD></TR><TR><TD ALIGN="LEFT">FK payroll_id</TD></TR><TR><TD ALIGN="LEFT">type, amount</TD></TR></TABLE>>];
+  deductions [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#145077"><FONT COLOR="white"><B>PAYROLL_DEDUCTIONS</B></FONT></TD></TR><TR><TD ALIGN="LEFT">PK deduction_id</TD></TR><TR><TD ALIGN="LEFT">FK payroll_id</TD></TR><TR><TD ALIGN="LEFT">type, statutory, amount</TD></TR></TABLE>>];
+  payslips [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#145077"><FONT COLOR="white"><B>PAYSLIPS</B></FONT></TD></TR><TR><TD ALIGN="LEFT">PK payslip_id</TD></TR><TR><TD ALIGN="LEFT">UK/FK payroll_id</TD></TR></TABLE>>];
+  transfers [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#145077"><FONT COLOR="white"><B>BANK_TRANSFERS</B></FONT></TD></TR><TR><TD ALIGN="LEFT">PK transfer_id</TD></TR><TR><TD ALIGN="LEFT">UK/FK payroll_id</TD></TR><TR><TD ALIGN="LEFT">FK employee_id, amount, status</TD></TR></TABLE>>];
+  departments -> employees [label="1 : many"];
+  designations -> employees [label="1 : many"];
+  designations -> salary [label="1 : many"];
+  employees -> attendance [label="1 : many"];
+  employees -> loans [label="1 : many"];
+  employees -> payroll [label="1 : many"];
+  periods -> payroll [label="1 : many"];
+  attendance -> payroll [label="optional FK"];
+  payroll -> earnings [label="1 : many"];
+  payroll -> deductions [label="1 : many"];
+  payroll -> payslips [label="1 : 0..1"];
+  payroll -> transfers [label="1 : 0..1"];
+}
